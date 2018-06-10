@@ -1,21 +1,23 @@
 class Solution:
     # @param A : tuple of integers
     # @return an integer
+    def h(self, seq):
+        return sorted(range(len(seq)), key=seq.__getitem__)
+    
     def maximumGap(self, A):
-        n = len(A)
-        if n == 1:
-            return 0
-        left = [0]*n; left[0] = A[0]
-        for i in range(1, n):
-            left[i] = min(left[i-1], A[i])
-        right = [0]*n; right[-1] = A[-1]
-        for i in range(n-2, -1, -1):
-            right[i] = max(right[i+1], A[i])
-        i = 0; j = 0; ans = -1
-        while i < n and j < n:
-            if right[j] >= left[i]:
-                ans = max(ans, j-i)
-                j += 1
+        
+        if len(A) == 0:
+            return -1
+        
+        index_sort = self.h(A)
+        
+        max_dist = 0
+        max_index_right = index_sort[len(A)-1]
+        
+        for i in range(len(A)-1, -1, -1):
+            if index_sort[i] < max_index_right:
+                max_dist = max(max_index_right-index_sort[i], max_dist)
             else:
-                i += 1
-        return ans
+                max_index_right = index_sort[i]
+        
+        return max_dist
